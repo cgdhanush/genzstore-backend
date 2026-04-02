@@ -1,11 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/store_db?createDatabaseIfNotExist=true
-    username: root
-    password: root1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
+  mongodb:
+    uri: mongodb://admin:admin1234@localhost:27017/store_db?authSource=admin
+  
