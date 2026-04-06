@@ -3,6 +3,7 @@ package com.cg.genzstore.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-    private final UserService userService;
+    
+    @Autowired
+    private UserService userService;
 
     private UserDTO convertToDTO(User user) {
         return new UserDTO(
