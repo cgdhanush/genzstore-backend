@@ -2,6 +2,7 @@ package com.cg.genzstore.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.genzstore.model.entity.User;
@@ -12,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public User createUser(User user) {
         return userRepository.save(user);
@@ -22,8 +25,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(String id) {
-        return userRepository.findById(id)
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
