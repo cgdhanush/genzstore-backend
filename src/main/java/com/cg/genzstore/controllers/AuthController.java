@@ -11,9 +11,8 @@ import com.cg.genzstore.model.dto.UserRequestDTO;
 import com.cg.genzstore.model.entity.User;
 import com.cg.genzstore.repository.UserRepository;
 import com.cg.genzstore.service.JwtService;
-import com.cg.genzstore.service.TokenBlacklistService;
+import com.cg.genzstore.service.TokenAllowlistService;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,7 +29,7 @@ public class AuthController {
     private JwtService jwtService;
 
     @Autowired
-    private TokenBlacklistService blacklistService;
+    private TokenAllowlistService blacklistService;
 
     @PostMapping("/signup")
     public String signup(@Valid @RequestBody UserCreateDTO requestDTO) {
@@ -55,6 +54,7 @@ public class AuthController {
                 .filter(u -> passwordEncoder.matches(requestDTO.getPassword(), u.getPassword()))
                 .map(u -> {
                     String token = jwtService.generateToken(u);
+                    blacklistService.allowlistToken(token);
 
                     return Map.of(
                             "message", "Login successful",
