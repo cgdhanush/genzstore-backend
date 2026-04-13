@@ -1,11 +1,15 @@
 package com.cg.genzstore.controllers;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.cg.genzstore.model.dto.ApiResponse;
 import com.cg.genzstore.model.dto.UserCreateDTO;
 import com.cg.genzstore.model.dto.UserRequestDTO;
 import com.cg.genzstore.model.entity.User;
@@ -32,20 +36,26 @@ public class AuthController {
     private TokenAllowlistService blacklistService;
 
     @PostMapping("/signup")
-    public String signup(@Valid @RequestBody UserCreateDTO requestDTO) {
+    public ResponseEntity<?> signup(@Valid @RequestBody UserCreateDTO requestDTO) {
+
         if (userRepository.findByEmail(requestDTO.getEmail()).isPresent()) {
-            return "Email already exists!";
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Email already exists!"));
         }
-        // Create New User
+
         User newUser = User.builder()
-            .name(requestDTO.getName())
-            .email(requestDTO.getEmail())
-            .password(passwordEncoder.encode(requestDTO.getPassword()))
-            .role(requestDTO.getRole())
-            .build();
-            
+                .name(requestDTO.getName())
+                .email(requestDTO.getEmail())
+                .password(passwordEncoder.encode(requestDTO.getPassword()))
+                .role(requestDTO.getRole())
+                .build();
+
         userRepository.save(newUser);
-        return "User registered successfully!";
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse("User registered successfully!"));
     }
 
     @PostMapping("/login")
@@ -64,21 +74,32 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(@RequestHeader("Authorization") String header) {
+    public ResponseEntity<?> logout(
+            @RequestHeader(value = "Authorization", required = false) String header) {
 
-        String token = header.substring(7); // remove "Bearer "
+        if (header == null || !header.startsWith("Bearer ")) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse("Missing or invalid Authorization header"));
+        }
+
+        String token = header.substring(7);
         blacklistService.blacklistToken(token);
 
-        return "Logged out successfully";
+        return ResponseEntity.ok(new ApiResponse("Logged out successfully"));
     }
 
     @GetMapping("/profile")
-    public String profile(@RequestHeader("Authorization") String header) {
+    public Map<String, Object> profile(@RequestHeader("Authorization") String header) {
 
         String token = header.substring(7); // remove "Bearer "
         String email = jwtService.extractEmail(token);
 
-        return "Welcome " + email;
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Welcome");
+        response.put("email", email);
+
+        return response;
     }
 
 }
