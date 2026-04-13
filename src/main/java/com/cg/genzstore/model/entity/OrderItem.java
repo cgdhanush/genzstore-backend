@@ -1,7 +1,7 @@
 package com.cg.genzstore.model.entity;
 
 public class OrderItem {
-    private Long id;
+    private String productId;
     private int quantity;
     private double price;
 }

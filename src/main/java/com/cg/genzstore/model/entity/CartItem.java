@@ -2,6 +2,6 @@ package com.cg.genzstore.model.entity;
 
 public class CartItem {
     
-    private Long id;
+    private String productId;
     private int quantity;
 }
