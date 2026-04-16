@@ -1,5 +1,7 @@
 package com.cg.genzstore.model.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProductDTO {
+public class ProductRequestDTO {
     private String name;
     private String description;
-    private Integer price;
     private String category;
-
+    private Integer price;
+    private MultipartFile file;
 }

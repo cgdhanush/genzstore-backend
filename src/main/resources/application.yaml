@@ -1,4 +1,7 @@
 spring:
   mongodb:
     uri: mongodb://admin:admin1234@localhost:27017/store_db?authSource=admin
-  
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
