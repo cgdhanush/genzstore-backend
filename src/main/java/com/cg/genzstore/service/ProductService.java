@@ -18,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductRepository repository;
+
+    @Autowired
+    private FileService fileService;
 
     public Product saveProduct(String name, String desc, String category, Integer price, MultipartFile file) throws Exception {
 
@@ -28,18 +31,25 @@ public class ProductService {
         product.setCategory(category);
         product.setPrice(price);
 
-        product.setImage(
-                new Binary(file.getBytes()));
+        String imageId = fileService.uploadImage(file);
+        product.setImageId(imageId);
 
-        return productRepository.save(product);
+        return repository.save(product);
+    }
+
+    public byte[] getProductImage(String productId) throws IOException {
+        Product product = repository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        return fileService.getImage(product.getImageId());
     }
 
     public List<Product> getAllProduct() {
-        return productRepository.findAll();
+        return repository.findAll();
     }
 
     public Product getProductByName(String name) {
-        return productRepository.findByName(name)
+        return repository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
@@ -51,11 +61,11 @@ public class ProductService {
     // existing.setPrice(updatedProduct.getPrice());
     // existing.setImageUrl(updatedProduct.getImageUrl());
 
-    // return productRepository.save(existing);
+    // return repository.save(existing);
     // }
 
     // public void deleteProduct(String name) {
     // Product product = getProductByName(name);
-    // productRepository.delete(product);
+    // repository.delete(product);
     // }
 }

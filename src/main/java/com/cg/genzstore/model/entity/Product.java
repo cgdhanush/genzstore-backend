@@ -1,6 +1,5 @@
 package com.cg.genzstore.model.entity;
 
-import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,5 +21,5 @@ public class Product {
     private String description;
     private String category;
     private Integer price;
-    private Binary image;
+    private String imageId;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cg.genzstore.model.dto.ProductDTO;
 import com.cg.genzstore.model.dto.ProductRequestDTO;
 import com.cg.genzstore.model.entity.Product;
+import com.cg.genzstore.service.FileService;
 import com.cg.genzstore.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,12 +33,17 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private FileService fileService;;
+
     private ProductDTO convertToDTO(Product product) {
         return new ProductDTO(
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getCategory());
+                product.getCategory(),
+                product.getImageId()
+        );
     }
 
     @PostMapping(value = "/api/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -65,12 +72,12 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getImage(@PathVariable String name) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
 
-        Product product = productService.getProductByName(name);
+        byte[] image = fileService.getImage(id);
 
         return ResponseEntity.ok()
-                .header("Content-Type", "image/jpeg")
-                .body(product.getImage().getData());
+                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                .body(image);
     }
 }
