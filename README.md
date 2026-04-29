@@ -20,7 +20,6 @@ GenzStore Backend powers the core functionality of the platform — handling use
 * **Maven / Gradle**
 * **JWT Authentication**
 * **Lombok**
-* **Docker (optional)**
 
 ---
 
