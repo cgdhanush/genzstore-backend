@@ -30,13 +30,6 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    private UserDTO convertToDTO(User user) {
-        return new UserDTO(
-                user.getName(),
-                user.getEmail(),
-                user.getRole());
-    }
-
     @GetMapping("/profile")
     public Map<String, Object> profile(@RequestHeader("Authorization") String header) {
 
@@ -53,9 +46,4 @@ public class UserController {
         return response;
     }
 
-    @GetMapping("/{id}")
-    public UserDTO getUser(@PathVariable String email) {
-        User user = userService.getUserByEmail(email);
-        return convertToDTO(user);
-    }
 }

@@ -17,8 +17,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public String getUserId(String header) {
+        String email = jwtService.extractEmail(header.substring(7));
+        User user = getUserByEmail(email);
+        return user.getId();
     }
 }
