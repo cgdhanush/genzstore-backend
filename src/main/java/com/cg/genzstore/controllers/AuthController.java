@@ -1,6 +1,5 @@
 package com.cg.genzstore.controllers;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class AuthController {
                 .name(requestDTO.getName())
                 .email(requestDTO.getEmail())
                 .password(passwordEncoder.encode(requestDTO.getPassword()))
-                .role(requestDTO.getRole())
+                .role("USER")
                 .build();
 
         userRepository.save(newUser);
@@ -87,19 +86,6 @@ public class AuthController {
         blacklistService.blacklistToken(token);
 
         return ResponseEntity.ok(new ApiResponse("Logged out successfully"));
-    }
-
-    @GetMapping("/profile")
-    public Map<String, Object> profile(@RequestHeader("Authorization") String header) {
-
-        String token = header.substring(7); // remove "Bearer "
-        String email = jwtService.extractEmail(token);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Welcome");
-        response.put("email", email);
-
-        return response;
     }
 
 }
