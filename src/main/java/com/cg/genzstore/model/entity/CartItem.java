@@ -1,7 +1,11 @@
 package com.cg.genzstore.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CartItem {
-    
-    private String productId;
+    private Product product;
     private int quantity;
 }
