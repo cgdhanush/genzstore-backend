@@ -68,7 +68,7 @@ public class AuthController {
 
                     return Map.of(
                             "message", "Login successful",
-                            "token", token);
+                            "access_token", token);
                 })
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     }
