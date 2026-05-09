@@ -53,19 +53,4 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    // public Product updateProduct(String name, Product updatedProduct) {
-    // Product existing = getProductByName(name);
-
-    // existing.setName(updatedProduct.getName());
-    // existing.setDescription(updatedProduct.getDescription());
-    // existing.setPrice(updatedProduct.getPrice());
-    // existing.setImageUrl(updatedProduct.getImageUrl());
-
-    // return repository.save(existing);
-    // }
-
-    // public void deleteProduct(String name) {
-    // Product product = getProductByName(name);
-    // repository.delete(product);
-    // }
 }
