@@ -3,7 +3,6 @@ package com.cg.genzstore.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cg.genzstore.model.dto.ProductDTO;
 import com.cg.genzstore.model.entity.Product;
 import com.cg.genzstore.service.FileService;
 import com.cg.genzstore.service.ProductService;
@@ -35,15 +33,6 @@ public class ProductController {
     @Autowired
     private FileService fileService;;
 
-    private ProductDTO convertToDTO(Product product) {
-        return new ProductDTO(
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getCategory(),
-                product.getImageId());
-    }
-
     @PostMapping(value = "/api/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Product createProduct(
             @RequestParam String name,
@@ -56,16 +45,18 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDTO> getAllProduct() {
-        return productService.getAllProduct().stream()
-                .map(p -> convertToDTO(p))
-                .collect(Collectors.toList());
+    public List<Product> getAllProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Integer limit) {
+        return productService.getAllProducts(category, minPrice, maxPrice, limit);
     }
 
     @GetMapping("/{id}")
-    public ProductDTO getProduct(@PathVariable String name) {
-        Product p = productService.getProductByName(name);
-        return convertToDTO(p);
+    public Product getProduct(@PathVariable String name) {
+        return productService.getProductByName(name);
+
     }
 
     @GetMapping("/{id}/image")
@@ -81,7 +72,7 @@ public class ProductController {
     @GetMapping("/image/random")
     public ResponseEntity<byte[]> getRandomImage() throws IOException {
 
-        List<Product> products = productService.getAllProduct();
+        List<Product> products = productService.getAllProducts(null, null, null, null);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();

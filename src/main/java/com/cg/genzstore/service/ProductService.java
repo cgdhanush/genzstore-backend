@@ -23,7 +23,8 @@ public class ProductService {
     @Autowired
     private FileService fileService;
 
-    public Product saveProduct(String name, String desc, String category, Integer price, MultipartFile file) throws Exception {
+    public Product saveProduct(String name, String desc, String category, Integer price, MultipartFile file)
+            throws Exception {
 
         Product product = new Product();
         product.setName(name);
@@ -44,8 +45,36 @@ public class ProductService {
         return fileService.getImage(product.getImageId());
     }
 
-    public List<Product> getAllProduct() {
-        return repository.findAll();
+    public List<Product> getAllProducts(
+            String category,
+            Double minPrice,
+            Double maxPrice,
+            Integer limit) {
+        List<Product> products = repository.findAll();
+
+        if (category != null) {
+            products = products.stream()
+                    .filter(p -> p.getCategory().equalsIgnoreCase(category))
+                    .toList();
+        }
+
+        if (minPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice() >= minPrice)
+                    .toList();
+        }
+
+        if (maxPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice() <= maxPrice)
+                    .toList();
+        }
+
+        if (limit != null && limit > 0 && limit < products.size()) {
+            products = products.subList(0, limit);
+        }
+
+        return products;
     }
 
     public Product getProductByName(String name) {
