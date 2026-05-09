@@ -77,8 +77,8 @@ public class ProductService {
         return products;
     }
 
-    public Product getProductByName(String name) {
-        return repository.findByName(name)
+    public Product getProductById(String id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 

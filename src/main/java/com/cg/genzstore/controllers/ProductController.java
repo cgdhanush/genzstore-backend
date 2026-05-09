@@ -54,8 +54,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable String name) {
-        return productService.getProductByName(name);
+    public Product getProduct(@PathVariable String id) {
+        return productService.getProductById(id);
 
     }
 
