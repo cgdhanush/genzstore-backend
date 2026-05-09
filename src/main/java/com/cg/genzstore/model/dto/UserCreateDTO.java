@@ -11,7 +11,6 @@ import lombok.Setter;
 public class UserCreateDTO {
 
     @NotBlank(message = "Name is required")
-    @Size(min = 2, max = 25, message = "Name must be between 2 and 25 characters")
     private String name;
 
     @NotBlank(message = "Email is required")
@@ -21,7 +20,4 @@ public class UserCreateDTO {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
-
-    @NotBlank(message = "Role is required")
-    private String role;
 }

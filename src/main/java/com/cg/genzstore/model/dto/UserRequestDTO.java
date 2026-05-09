@@ -15,5 +15,4 @@ public class UserRequestDTO {
     
     @NotBlank
     private String password;
-    private String role;
 }
