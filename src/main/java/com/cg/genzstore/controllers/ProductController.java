@@ -2,7 +2,9 @@ package com.cg.genzstore.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -86,5 +88,15 @@ public class ProductController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
                 .body(image);
+    }
+
+    @GetMapping("/categories")
+    public Set<String> getAllCategories() {
+        List<Product> products = productService.getAllProducts(null, null, null, null);
+
+        return products.stream()
+                .map(Product::getCategory)
+                .filter(category -> category != null && !category.isBlank())
+                .collect(Collectors.toSet());
     }
 }
