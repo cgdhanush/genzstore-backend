@@ -28,6 +28,7 @@ public class OrderService {
                 .products(order.getProducts())
                 .totalAmount(order.getTotalAmount())
                 .status(order.getStatus())
+                .orderDate(order.getOrderDate())
                 .build();
     }
 
@@ -41,6 +42,8 @@ public class OrderService {
                         .products(order.getProducts())
                         .totalAmount(order.getTotalAmount())
                         .status(order.getStatus())
+                        .orderDate(order.getOrderDate())
+
                         .build())
                 .toList();
     }

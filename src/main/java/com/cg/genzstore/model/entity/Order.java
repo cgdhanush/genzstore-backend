@@ -1,5 +1,6 @@
 package com.cg.genzstore.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -19,12 +20,9 @@ public class Order {
 
     @Id
     private String id;
-
     private String userId;
-
-    private List<Product> products;
-
+    private List<OrderProduct> products;
     private double totalAmount;
-
     private String status;
+    private LocalDateTime orderDate;
 }
