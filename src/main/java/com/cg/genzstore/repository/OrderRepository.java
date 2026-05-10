@@ -8,4 +8,6 @@ import com.cg.genzstore.model.entity.Order;
 
 public interface OrderRepository extends MongoRepository<Order, String> {
     List<Order> findByUserId(String userId);
+
+    List<Order> findByUserIdOrderByOrderDateDesc(String userId);
 }
