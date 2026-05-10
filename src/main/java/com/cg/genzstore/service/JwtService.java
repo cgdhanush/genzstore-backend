@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Service;
 
 import com.cg.genzstore.model.entity.User;
@@ -21,8 +22,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    // Generate Token
     public String generateToken(User user) {
+        if (user == null || user.getEmail() == null) {
+            throw new IllegalArgumentException("User or email cannot be null");
+        }
+
         return Jwts.builder()
                 .subject(user.getEmail())
                 .issuedAt(new Date())
@@ -31,27 +35,51 @@ public class JwtService {
                 .compact();
     }
 
-    // Extract email
     public String extractEmail(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            return extractClaims(token).getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new RuntimeException("Invalid JWT token: cannot extract email", e);
+        }
     }
 
-    // Validate token
     public boolean isTokenValid(String token, User user) {
-        String email = extractEmail(token);
-        return email.equals(user.getEmail()) && !isTokenExpired(token);
+        try {
+            if (token == null || user == null || user.getEmail() == null) {
+                return false;
+            }
+
+            String email = extractEmail(token);
+            return email.equals(user.getEmail()) && !isTokenExpired(token);
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        try {
+            return extractClaims(token).getExpiration().before(new Date());
+        } catch (JwtException e) {
+            return true;
+        }
     }
 
     private Claims extractClaims(String token) {
-        Jws<Claims> jws = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token);
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("JWT token cannot be null or empty");
+        }
 
-        return jws.getPayload();
+        try {
+            Jws<Claims> jws = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token);
+
+            return jws.getPayload();
+
+        } catch (JwtException e) {
+            throw new RuntimeException("Failed to parse JWT token", e);
+        }
     }
 }
