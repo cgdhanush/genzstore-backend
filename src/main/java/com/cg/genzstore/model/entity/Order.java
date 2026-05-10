@@ -5,6 +5,15 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @Document(collection = "orders")
 public class Order {
 
@@ -13,7 +22,7 @@ public class Order {
 
     private String userId;
 
-    private List<OrderItem> items;
+    private List<Product> products;
 
     private double totalAmount;
 
