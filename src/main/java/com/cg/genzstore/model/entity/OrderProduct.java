@@ -1,8 +1,10 @@
 package com.cg.genzstore.model.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class OrderProduct {
     private Product product;
     private int quantity;
