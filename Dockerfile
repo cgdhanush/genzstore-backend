@@ -1,4 +1,5 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
@@ -12,7 +13,8 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 
-FROM eclipse-temurin:17-jdk-alpine
+# Runtime stage
+FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 
